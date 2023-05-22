@@ -66,7 +66,7 @@ export const usePosts = create(
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 if (res.data) {
-                    set({ loading: false });
+                    window.location.reload();
                 }
             } catch (error) {
                 set({

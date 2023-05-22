@@ -23,7 +23,12 @@ class PostController extends Controller
     }
 
     public function getMyPosts($userId){
-        $posts = Post::where('user_id',$userId)->orderBy('updated_at','desc')->with('likes')->with('comments.user:id,fullname')->get();
+        $posts = Post::where('user_id', $userId)
+                    ->orderBy('updated_at', 'desc')
+                    ->with('likes')
+                    ->with('comments.user:id,fullname')
+                    ->get();
+
         return response($posts);
     }
 

@@ -140,7 +140,12 @@ const Profile = () => {
                     updatedPosts.map((post) => (
                         <Card fluid>
                             <Dropdown
-                                style={{ position: "absolute", right: "10px" }}
+                                icon={"th"}
+                                style={{
+                                    position: "absolute",
+                                    right: "10px",
+                                    top: "10px",
+                                }}
                             >
                                 <Dropdown.Menu>
                                     <Dropdown.Item text="Retweet" />
@@ -199,7 +204,11 @@ const Profile = () => {
                             <Card.Content>
                                 <Comment.Group>
                                     <Header as="h4" dividing>
-                                        Comments
+                                        Comments (
+                                        {post.comments.length === 0
+                                            ? "No comments yet"
+                                            : post.comments.length}
+                                        )
                                     </Header>
 
                                     {post.comments.map((com) => (
@@ -210,9 +219,10 @@ const Profile = () => {
                                                     {com.user.fullname}
                                                 </Comment.Author>
                                                 <Comment.Metadata>
+                                                    at{" "}
                                                     {new Date(
                                                         com.created_at
-                                                    ).getTime()}
+                                                    ).toLocaleString()}
                                                 </Comment.Metadata>
                                                 <Comment.Text>
                                                     {com.comment}

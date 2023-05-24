@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../services/auth";
+import { Input, Button, Divider, Segment } from "semantic-ui-react";
 
-const Chat = ({ senderId, receiverId }) => {
+const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
 
     const { user } = useAuth();
     const currentUser = JSON.parse(localStorage.getItem("user"));
 
-    // Function to send a new message
     const sendMessage = () => {
         axios
             .post(`${import.meta.env.VITE_BASE_API_URL}/messages`, {
@@ -19,7 +19,6 @@ const Chat = ({ senderId, receiverId }) => {
             })
             .then((response) => {
                 console.log(response.data.message);
-                // Clear the input field after sending the message
                 setNewMessage("");
             })
             .catch((error) => {
@@ -27,7 +26,6 @@ const Chat = ({ senderId, receiverId }) => {
             });
     };
 
-    // Function to retrieve the chat history
     const getChatHistory = () => {
         axios
             .get(
@@ -44,32 +42,54 @@ const Chat = ({ senderId, receiverId }) => {
     };
 
     useEffect(() => {
-        // Retrieve the chat history when the component mounts
         getChatHistory();
     }, []);
 
     return (
-        <div>
-            <h2>Chat</h2>
-            <div>
+        <Segment style={{ maxWidth: "600px", margin: "0 auto" }}>
+            <h2 style={{ textAlign: "center" }}>Chat</h2>
+            <div style={{ maxHeight: "400px", overflowY: "scroll" }}>
                 {messages.map((message) => (
-                    <div key={message.id}>
-                        <p>Sender: {message.sender_id}</p>
-                        <p>Receiver: {message.receiver_id}</p>
-                        <p>Content: {message.message}</p>
-                        <hr />
-                    </div>
+                    <Segment
+                        style={
+                            message.sender_id === currentUser.id
+                                ? {
+                                      backgroundColor: "white",
+                                      textAlign: "right",
+                                  }
+                                : { backgroundColor: "#B6EAFA" }
+                        }
+                        key={message.id}
+                    >
+                        <p
+                            style={
+                                message.sender_id === currentUser.id
+                                    ? { fontWeight: "bold", textAlign: "right" }
+                                    : { fontWeight: "bold" }
+                            }
+                        >
+                            {message.sender_id === currentUser.id
+                                ? `You`
+                                : `${user.fullname}`}
+                        </p>
+                        <p>{message.message}</p>
+                    </Segment>
                 ))}
             </div>
-            <div>
-                <input
-                    type="text"
+            <Divider />
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <Input
+                    fluid
+                    placeholder="Type your message..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
+                    style={{ marginRight: "10px", width: "100%" }}
                 />
-                <button onClick={sendMessage}>Send</button>
+                <Button primary onClick={sendMessage}>
+                    Send
+                </Button>
             </div>
-        </div>
+        </Segment>
     );
 };
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Messages;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class MessagesController extends Controller
 {
@@ -14,6 +15,7 @@ class MessagesController extends Controller
             'receiver_id' => 'required',
             'message' => 'required',
         ]);
+
 
         $message = Messages::create([
             'sender_id' => $attr['sender_id'],
@@ -29,7 +31,7 @@ class MessagesController extends Controller
         $messages = Messages::whereIn('sender_id', [$senderId, $receiverId])
             ->whereIn('receiver_id', [$senderId, $receiverId])
             ->get();
-
+            
         return response()->json($messages);
     }
 }

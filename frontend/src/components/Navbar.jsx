@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button, Search } from "semantic-ui-react";
 import { useAuth } from "../services/auth";
 import axios from "axios";
+import Pusher from "pusher-js";
 
 const Navbar = () => {
     const { logout } = useAuth();
@@ -35,13 +36,31 @@ const Navbar = () => {
         }
     }, [searchQuery]);
 
-    const handleSearchChange = (event, { value }) => {
+    const handleSearchChange = ({ value }) => {
         setSearchQuery(value);
     };
 
-    const handleResultSelect = (event, { result }) => {
+    const handleResultSelect = ({ result }) => {
         window.location.href = `/profile/${result.suggestion.fullname}/${result.suggestion.id}`;
     };
+    const [notifications, setNotifications] = useState([]);
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        var pusher = new Pusher("ad0b65d72f5bb275e8ce", {
+            cluster: "eu",
+        });
+
+        const channel = pusher.subscribe(`notification.${user?.fullname}`);
+        channel.bind(`notification`, function (data) {
+            setNotifications((prevNotifications) => [
+                ...prevNotifications,
+                data,
+            ]);
+        });
+    }, []);
+
+    console.log(notifications);
 
     return (
         <div className="navbar">

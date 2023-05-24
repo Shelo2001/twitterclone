@@ -6,6 +6,7 @@ use App\Models\Like;
 use App\Models\Post;
 use App\Models\Comments;
 use Illuminate\Http\Request;
+use App\Events\Notifications;
 
 class PostController extends Controller
 {
@@ -55,13 +56,18 @@ class PostController extends Controller
         $attr= $request->validate([
             'comment' => 'required|string',
             'comment_user_id' => 'required',
-            'post_id' => 'required'
+            'post_id' => 'required',
+            'sender_fullname' => 'required',
+            'reciever_fullname' => 'required',
         ]);
         $comment = Comments::create([
             'comment'=>$attr['comment'],
             'comment_user_id'=>$attr['comment_user_id'],
             'post_id'=>$attr['post_id'],
         ]);
+
+        
+        event(new Notifications($attr['comment'],$attr['reciever_fullname'], $attr['sender_fullname']."Commented on your post"));
 
         return response(["comment"=>$comment],201);
     }

@@ -123,9 +123,15 @@ const Profile = () => {
                 ) : (
                     <Card.Content extra>
                         <div>
-                            <Button style={{ width: "49%" }} basic color="blue">
-                                Message
-                            </Button>
+                            <Link to="/chat">
+                                <Button
+                                    style={{ width: "49%" }}
+                                    basic
+                                    color="blue"
+                                >
+                                    Message
+                                </Button>
+                            </Link>
                             <Button style={{ width: "50%" }} color="blue">
                                 Follow
                             </Button>
@@ -149,6 +155,9 @@ const Profile = () => {
                             >
                                 <Dropdown.Menu>
                                     <Dropdown.Item text="Retweet" />
+                                    {currentUser.id == id && (
+                                        <Dropdown.Item text="Delete" />
+                                    )}
                                 </Dropdown.Menu>
                             </Dropdown>
                             <Card.Content>

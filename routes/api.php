@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\MessagesController;
+use App\Http\Controllers\AuthenticationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +28,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/post/comment/create', [PostController::class, 'createComment']);
 });
 Route::get('/users/search', [AuthenticationController::class, 'search']);
+Route::post('/messages', [MessagesController::class, 'sendMessage']);
+    Route::get('/messages/{senderId}/{receiverId}', [MessagesController::class, 'getChatHistory']);
